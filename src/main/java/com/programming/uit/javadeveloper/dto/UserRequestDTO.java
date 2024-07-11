@@ -46,9 +46,10 @@ public class UserRequestDTO implements Serializable {
     @NotEmpty(message = "addresses can not empty")
     private Set<Address> addresses;
 
-    public UserRequestDTO(String firstName, String lastName, String email) {
+    public UserRequestDTO(String firstName, String lastName, String email, String phone) {
         this.firstName = firstName;
         this.lastName = lastName;
         this.email = email;
+        this.phone = phone;
     }
 }
