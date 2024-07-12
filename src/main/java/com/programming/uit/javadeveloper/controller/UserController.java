@@ -24,7 +24,7 @@ public class UserController {
         System.out.println("Request add user " + user.getFirstName());
 
         try {
-            return new ResponseData(HttpStatus.CREATED.value(), "User added successfully,", 1);
+            return new ResponseData<>(HttpStatus.CREATED.value(), "User added successfully,", 1);
         } catch (Exception e) {
             return new ResponseError(/**/HttpStatus.BAD_REQUEST.value(), e.getMessage());
         }
