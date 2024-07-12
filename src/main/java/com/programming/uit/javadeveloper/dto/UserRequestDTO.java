@@ -1,17 +1,17 @@
 package com.programming.uit.javadeveloper.dto;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
-import com.programming.uit.javadeveloper.util.PhoneNumber;
-import jakarta.validation.constraints.Email;
-import jakarta.validation.constraints.NotBlank;
-import jakarta.validation.constraints.NotNull;
-import jakarta.validation.constraints.Pattern;
+import com.programming.uit.javadeveloper.util.*;
+import jakarta.validation.constraints.*;
 import lombok.Getter;
 import lombok.Setter;
 import org.springframework.format.annotation.DateTimeFormat;
 
 import java.io.Serializable;
 import java.util.Date;
+import java.util.Set;
+
+import static com.programming.uit.javadeveloper.util.Gender.*;
 
 @Getter
 @Setter
@@ -34,16 +34,22 @@ public class UserRequestDTO implements Serializable {
     @JsonFormat(pattern = "MM/dd/yyyy")
     private Date dateOfBirth;
 
+    @GenderSubset(anyOf = {MALE, FEMALE, OTHER})
+    private Gender gender;
+    @EnumPattern(name = "status", regexp = "ACTIVE|INACTIVE|NONE")
+    private UserStatus status;
     @NotNull(message = "username must be not null")
     private String username;
 
     @NotNull(message = "password must be not null")
     private String password;
+    @NotEmpty(message = "addresses can not empty")
+    private Set<Address> addresses;
 
-
-    public UserRequestDTO(String firstName, String lastName, String email) {
+    public UserRequestDTO(String firstName, String lastName, String email, String phone) {
         this.firstName = firstName;
         this.lastName = lastName;
         this.email = email;
+        this.phone = phone;
     }
 }
