@@ -31,23 +31,6 @@ public class GlobalExceptionHandler {
     @ExceptionHandler({ConstraintViolationException.class,
             MissingServletRequestParameterException.class, MethodArgumentNotValidException.class})
     @ResponseStatus(BAD_REQUEST)
-    @ApiResponses(value = {
-            @ApiResponse(responseCode = "400", description = "Bad Request",
-                    content = {@Content(mediaType = APPLICATION_JSON_VALUE,
-                            examples = @ExampleObject(
-                                    name = "Handle exception when the data invalid. (@RequestBody, @RequestParam, @PathVariable)",
-                                    summary = "Handle Bad Request",
-                                    value = """
-                                            {
-                                                 "timestamp": "2024-04-07T11:38:56.368+00:00",
-                                                 "status": 400,
-                                                 "path": "/api/v1/...",
-                                                 "error": "Invalid Payload",
-                                                 "message": "{data} must be not blank"
-                                             }
-                                            """
-                            ))})
-    })
     public ErrorResponse handleValidationException(Exception e, WebRequest request) {
         ErrorResponse errorResponse = new ErrorResponse();
         errorResponse.setTimestamp(new Date());
@@ -86,24 +69,6 @@ public class GlobalExceptionHandler {
      * @return
      */
     @ExceptionHandler(InvalidDataException.class)
-    @ResponseStatus(CONFLICT)
-    @ApiResponses(value = {
-            @ApiResponse(responseCode = "409", description = "Conflict",
-                    content = {@Content(mediaType = APPLICATION_JSON_VALUE,
-                            examples = @ExampleObject(
-                                    name = "409 Response",
-                                    summary = "Handle exception when input data is conflicted",
-                                    value = """
-                                            {
-                                              "timestamp": "2023-10-19T06:07:35.321+00:00",
-                                              "status": 409,
-                                              "path": "/api/v1/...",
-                                              "error": "Conflict",
-                                              "message": "{data} exists, Please try again!"
-                                            }
-                                            """
-                            ))})
-    })
     public ErrorResponse handleDuplicateKeyException(InvalidDataException e, WebRequest request) {
         ErrorResponse errorResponse = new ErrorResponse();
         errorResponse.setTimestamp(new Date());
@@ -124,23 +89,6 @@ public class GlobalExceptionHandler {
      */
     @ExceptionHandler(Exception.class)
     @ResponseStatus(INTERNAL_SERVER_ERROR)
-    @ApiResponses(value = {
-            @ApiResponse(responseCode = "500", description = "Internal Server Error",
-                    content = {@Content(mediaType = APPLICATION_JSON_VALUE,
-                            examples = @ExampleObject(
-                                    name = "500 Response",
-                                    summary = "Handle exception when internal server error",
-                                    value = """
-                                            {
-                                              "timestamp": "2023-10-19T06:35:52.333+00:00",
-                                              "status": 500,
-                                              "path": "/api/v1/...",
-                                              "error": "Internal Server Error",
-                                              "message": "Connection timeout, please try again"
-                                            }
-                                            """
-                            ))})
-    })
     public ErrorResponse handleException(Exception e, WebRequest request) {
         ErrorResponse errorResponse = new ErrorResponse();
         errorResponse.setTimestamp(new Date());
