@@ -1,12 +1,12 @@
 package com.programming.uit.javadeveloper.controller;
 
 import com.programming.uit.javadeveloper.dto.UserRequestDTO;
-import com.programming.uit.javadeveloper.dto.respone.ResponseData;
-import com.programming.uit.javadeveloper.dto.respone.ResponseError;
-import com.programming.uit.javadeveloper.dto.respone.ResponseFailure;
-import com.programming.uit.javadeveloper.dto.respone.ResponseSuccess;
+import com.programming.uit.javadeveloper.dto.respone.*;
+import com.programming.uit.javadeveloper.service.UserService;
 import jakarta.validation.Valid;
 import jakarta.validation.constraints.Min;
+import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
@@ -17,16 +17,23 @@ import java.util.List;
 @RestController
 @RequestMapping("/user")
 @Validated
+@Slf4j
+@RequiredArgsConstructor
 public class UserController {
 
+    private final UserService userService;
+
     @PostMapping("/")
-    public ResponseData<Integer> addUser(@Valid @RequestBody UserRequestDTO user) {
-        System.out.println("Request add user " + user.getFirstName());
+    public ResponseData<Long> addUser(@Valid @RequestBody UserRequestDTO user) {
+        log.info("Request add user, {} {}", user.getFirstName(), user.getLastName());
 
         try {
-            return new ResponseData<>(HttpStatus.CREATED.value(), "User added successfully,", 1);
+            long userId = userService.saveUser(user);
+            return new ResponseData<>(HttpStatus.CREATED.value(), "User added successfully,", userId);
         } catch (Exception e) {
-            return new ResponseError(/**/HttpStatus.BAD_REQUEST.value(), e.getMessage());
+                log.error("error message = {} ", e.getMessage(), e.getCause());
+
+            return new ResponseError(HttpStatus.BAD_REQUEST.value(), e.getMessage());
         }
     }
 
@@ -43,9 +50,9 @@ public class UserController {
 
     @PatchMapping("/{userId}")
     public ResponseData<UserRequestDTO> updateStatus(@Min(1) @PathVariable int userId, @RequestParam boolean status) {
-        System.out.println("Request change status, userId=" + userId);
 
         try {
+
             return new ResponseData(HttpStatus.ACCEPTED.value(), "User's status changed successfully");
         } catch (Exception e) {
             return new ResponseError(HttpStatus.BAD_REQUEST.value(), e.getMessage());
@@ -65,10 +72,10 @@ public class UserController {
 
     @GetMapping("/{userId}")
     public ResponseSuccess getUser(@PathVariable @Min(1) int userId) {
-        System.out.println("Request get user detail, userId=" + userId);
 
         try {
-            return new ResponseSuccess(HttpStatus.OK, "user", new UserRequestDTO("Tay", "Java", "admin@tayjava.vn", "0123456789"));
+            UserDetailResponse userDetailResponse = userService.getUser(userId);
+            return new ResponseSuccess(HttpStatus.OK, "Get user Details",userDetailResponse);
         } catch (Exception e) {
             return new ResponseFailure(HttpStatus.BAD_REQUEST, e.getMessage());
         }
@@ -76,7 +83,7 @@ public class UserController {
 
     @GetMapping("/list")
     public ResponseData<List<UserRequestDTO>> getAllUser(@RequestParam(defaultValue = "0", required = false) int pageNo,
-                                   @Min(10) @RequestParam(defaultValue = "20", required = false) int pageSize) {
+                                                         @Min(10) @RequestParam(defaultValue = "20", required = false) int pageSize) {
         System.out.println("Request get all of users");
         return new ResponseData(HttpStatus.OK.value(), "users", List.of(new UserRequestDTO("Tay", "Java", "admin@tayjava.vn", "0123456789"),
                 new UserRequestDTO("Leo", "Messi", "leomessi@email.com", "0123456456")));

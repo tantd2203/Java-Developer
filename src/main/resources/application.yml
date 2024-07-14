@@ -1,0 +1,6 @@
+spring:
+  application:
+    name: Tan
+  profiles:
+    active: '@spring.profiles.active@'
+
