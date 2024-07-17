@@ -1,13 +1,15 @@
 package com.programming.uit.javadeveloper.service;
 
+import com.programming.uit.javadeveloper.dto.Address;
 import com.programming.uit.javadeveloper.dto.UserRequestDTO;
 import com.programming.uit.javadeveloper.dto.respone.PageResponse;
 import com.programming.uit.javadeveloper.dto.respone.UserDetailResponse;
 import com.programming.uit.javadeveloper.util.UserStatus;
+import org.springframework.data.jpa.repository.JpaRepository;
 
 import java.util.List;
 
-public interface UserService {
+public interface UserService  {
 
     long saveUser(UserRequestDTO request);
 

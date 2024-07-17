@@ -12,6 +12,10 @@ import com.programming.uit.javadeveloper.util.UserStatus;
 import com.programming.uit.javadeveloper.util.UserType;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -23,7 +27,7 @@ import java.util.Set;
 @Transactional
 @Slf4j
 @RequiredArgsConstructor
-public class UserServiceImpl implements UserService {
+public class UserServiceImpl implements UserService  {
 
     private final UserRepository userRepository;
 
@@ -121,8 +125,24 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public List<UserDetailResponse> getAllUsers_(int pageNo, int pageSize) {
-        return null;
+        int p = 0;
+        if (pageNo > 0) {
+            p = pageNo - 1;
+        }
+        Pageable pageable = PageRequest.of(p,pageSize);
+        Page<User> users = userRepository.findAll(pageable);
+
+
+        return users.stream().map(user ->
+                UserDetailResponse.builder()
+                        .firstName(user.getFirstName())
+                        .lastName(user.getLastName())
+                        .phone(user.getPhone())
+                        .email(user.getEmail())
+                        .build()).
+                toList();
     }
+
     private Set<Address> convertToAddress(Set<AddressDTO> addresses) {
 
         Set<Address> result = new HashSet<>();
@@ -140,6 +160,7 @@ public class UserServiceImpl implements UserService {
 
         return result;
     }
+
     private User getUserById(long userId) {
         return userRepository.findById(userId).orElseThrow(() -> new ResourceNotFoundException("User not found"));
     }

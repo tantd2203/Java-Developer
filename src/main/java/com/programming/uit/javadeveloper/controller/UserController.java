@@ -31,7 +31,7 @@ public class UserController {
             long userId = userService.saveUser(user);
             return new ResponseData<>(HttpStatus.CREATED.value(), "User added successfully,", userId);
         } catch (Exception e) {
-                log.error("error message = {} ", e.getMessage(), e.getCause());
+            log.error("error message = {} ", e.getMessage(), e.getCause());
 
             return new ResponseError(HttpStatus.BAD_REQUEST.value(), e.getMessage());
         }
@@ -75,17 +75,16 @@ public class UserController {
 
         try {
             UserDetailResponse userDetailResponse = userService.getUser(userId);
-            return new ResponseSuccess(HttpStatus.OK, "Get user Details",userDetailResponse);
+            return new ResponseSuccess(HttpStatus.OK, "Get user Details", userDetailResponse);
         } catch (Exception e) {
             return new ResponseFailure(HttpStatus.BAD_REQUEST, e.getMessage());
         }
     }
 
     @GetMapping("/list")
-    public ResponseData<List<UserRequestDTO>> getAllUser(@RequestParam(defaultValue = "0", required = false) int pageNo,
+    public ResponseData<List<UserDetailResponse>> getAllUser(@RequestParam(defaultValue = "0", required = false) int pageNo,
                                                          @Min(10) @RequestParam(defaultValue = "20", required = false) int pageSize) {
-        System.out.println("Request get all of users");
-        return new ResponseData(HttpStatus.OK.value(), "users", List.of(new UserRequestDTO("Tay", "Java", "admin@tayjava.vn", "0123456789"),
-                new UserRequestDTO("Leo", "Messi", "leomessi@email.com", "0123456456")));
+        log.info("Request get all user");
+        return new ResponseData(HttpStatus.OK.value(), "users", userService.getAllUsers_(pageNo,pageSize));
     }
 }
