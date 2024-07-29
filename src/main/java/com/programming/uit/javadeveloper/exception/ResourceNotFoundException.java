@@ -1,4 +1,4 @@
-package com.programming.uit.javadeveloper.service.impl;
+package com.programming.uit.javadeveloper.exception;
 
 public class ResourceNotFoundException extends RuntimeException {
 

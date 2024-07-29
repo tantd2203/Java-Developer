@@ -7,7 +7,7 @@ import com.programming.uit.javadeveloper.util.UserStatus;
 
 import java.util.List;
 
-public interface UserService {
+public interface UserService  {
 
     long saveUser(UserRequestDTO request);
 
@@ -19,7 +19,11 @@ public interface UserService {
 
     UserDetailResponse getUser(long userId);
 
-    PageResponse getAllUsers(int pageNo, int pageSize);
 
     List<UserDetailResponse> getAllUsers_(int pageNo, int pageSize);
+    List<UserDetailResponse> getAllUsersSortBy(int pageNo, int pageSize, String sortBy);
+    List<UserDetailResponse> getAllUsersWithSortByMultipleColumns(int pageNo, int pageSize, String... sorts);
+    PageResponse<?> getAllUsersWithSortBy(int pageNo, int pageSize, String sortBy);
+    PageResponse<?> getAllUsersAndSearchWithPagingAndSorting(int pageNo, int pageSize, String search, String sortBy);
+
 }
