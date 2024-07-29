@@ -2,6 +2,7 @@ package com.programming.uit.javadeveloper.dto.respone;
 
 import com.programming.uit.javadeveloper.util.Gender;
 import com.programming.uit.javadeveloper.util.UserStatus;
+import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
 
@@ -10,6 +11,7 @@ import java.util.Date;
 
 @Builder
 @Getter
+@AllArgsConstructor
 public class UserDetailResponse implements Serializable {
     private Long id;
 
@@ -30,4 +32,11 @@ public class UserDetailResponse implements Serializable {
     private String type;
 
     private UserStatus status;
+
+    public UserDetailResponse(Long id, String firstName, String lastName, String email) {
+        this.id = id;
+        this.firstName = firstName;
+        this.lastName = lastName;
+        this.email = email;
+    }
 }

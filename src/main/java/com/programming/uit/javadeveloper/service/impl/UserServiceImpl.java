@@ -7,6 +7,7 @@ import com.programming.uit.javadeveloper.dto.respone.UserDetailResponse;
 import com.programming.uit.javadeveloper.exception.ResourceNotFoundException;
 import com.programming.uit.javadeveloper.model.Address;
 import com.programming.uit.javadeveloper.model.User;
+import com.programming.uit.javadeveloper.repository.SearchRepository;
 import com.programming.uit.javadeveloper.repository.UserRepository;
 import com.programming.uit.javadeveloper.service.UserService;
 import com.programming.uit.javadeveloper.util.UserStatus;
@@ -36,6 +37,8 @@ import java.util.regex.Pattern;
 public class UserServiceImpl implements UserService {
 
     private final UserRepository userRepository;
+
+    private final SearchRepository searchRepository;
 
     @Override
     public long saveUser(UserRequestDTO request) {
@@ -265,6 +268,11 @@ public class UserServiceImpl implements UserService {
 
         return convertToPageResponse(users, pageable);
 
+    }
+
+    @Override
+    public PageResponse<?> getAllUsersAndSearchWithPagingAndSorting(int pageNo, int pageSize, String search, String sortBy) {
+        return searchRepository.getAllUsersAndSearchWithPagingAndSorting( pageNo,  pageSize,  search,  sortBy);
     }
 
     private Set<Address> convertToAddress(Set<AddressDTO> addresses) {
